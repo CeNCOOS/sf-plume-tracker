@@ -1,0 +1,357 @@
+DEBUG:opendrift.models.oceandrift:No machine learning correction available.
+DEBUG:opendrift.config:Adding 50 config items from environment
+DEBUG:opendrift.config:Adding 5 config items from environment
+DEBUG:opendrift.config:Adding 17 config items from __init__
+DEBUG:opendrift.config:  Overwriting config item readers:max_number_of_fails
+DEBUG:opendrift.config:Adding 5 config items from __init__
+INFO:opendrift.models.basemodel:OpenDriftSimulation initialised (version 1.11.7)
+DEBUG:opendrift.config:Adding 15 config items from oceandrift
+DEBUG:opendrift.config:  Overwriting config item seed:z
+INFO:opendrift.readers.reader_netCDF_CF_generic:Opening dataset: https://dods.ndbc.noaa.gov/thredds/dodsC/hfradar_uswc_2km
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Finding coordinate variables.
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Parsing CF grid mapping dictionary: {'grid_mapping_name': 'latitude_longitude', 'longitude_of_prime_meridian': np.float32(0.0), 'semi_major_axis': np.float32(6378137.0), 'inverse_flattening': np.float64(298.257223563)}
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Lon and lat are 1D arrays - using as projection coordinates
+INFO:opendrift.readers.reader_netCDF_CF_generic:Detected dimensions: {'time': 'time', 'x': 'lon', 'y': 'lat'}
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Skipped variables without standard_name: ['time_bnds', 'dopx', 'dopy', 'hdop', 'number_of_sites', 'number_of_radials']
+DEBUG:opendrift.readers.basereader.variables:Setting buffer size 10 for reader https://dods.ndbc.noaa.gov/thredds/dodsC/hfradar_uswc_2km, assuming a maximum average speed of 5 m/s and time span of 1:00:00
+INFO:opendrift.readers.basereader:Variable x_sea_water_velocity will be rotated from surface_eastward_sea_water_velocity
+INFO:opendrift.readers.basereader:Variable y_sea_water_velocity will be rotated from surface_northward_sea_water_velocity
+DEBUG:opendrift.readers.basereader:Variable mapping: ['sea_floor_depth_below_sea_level'] -> ['land_binary_mask'] is not activated
+DEBUG:opendrift.readers.basereader.variables:Adding variable mapping: ['x_sea_water_velocity', 'y_sea_water_velocity'] -> sea_water_speed
+INFO:opendrift.readers.reader_netCDF_CF_generic:Opening dataset: https://dods.ndbc.noaa.gov/thredds/dodsC/hfradar_uswc_6km
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Finding coordinate variables.
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Parsing CF grid mapping dictionary: {'grid_mapping_name': 'latitude_longitude', 'longitude_of_prime_meridian': np.float32(0.0), 'semi_major_axis': np.float32(6378137.0), 'inverse_flattening': np.float64(298.257223563)}
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Lon and lat are 1D arrays - using as projection coordinates
+INFO:opendrift.readers.reader_netCDF_CF_generic:Detected dimensions: {'time': 'time', 'x': 'lon', 'y': 'lat'}
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Skipped variables without standard_name: ['time_bnds', 'dopx', 'dopy', 'hdop', 'number_of_sites', 'number_of_radials']
+DEBUG:opendrift.readers.basereader.variables:Setting buffer size 5 for reader https://dods.ndbc.noaa.gov/thredds/dodsC/hfradar_uswc_6km, assuming a maximum average speed of 5 m/s and time span of 1:00:00
+INFO:opendrift.readers.basereader:Variable x_sea_water_velocity will be rotated from surface_eastward_sea_water_velocity
+INFO:opendrift.readers.basereader:Variable y_sea_water_velocity will be rotated from surface_northward_sea_water_velocity
+DEBUG:opendrift.readers.basereader:Variable mapping: ['sea_floor_depth_below_sea_level'] -> ['land_binary_mask'] is not activated
+DEBUG:opendrift.readers.basereader.variables:Adding variable mapping: ['x_sea_water_velocity', 'y_sea_water_velocity'] -> sea_water_speed
+DEBUG:opendrift.models.basemodel.environment:Added reader https://dods.ndbc.noaa.gov/thredds/dodsC/hfradar_uswc_2km
+DEBUG:opendrift.models.basemodel.environment:Added reader https://dods.ndbc.noaa.gov/thredds/dodsC/hfradar_uswc_6km
+INFO:opendrift.config:
+=============================================
+environment:constant:x_sea_water_velocity [None]
+environment:fallback:x_sea_water_velocity [0]
+environment:constant:y_sea_water_velocity [None]
+environment:fallback:y_sea_water_velocity [0]
+environment:constant:sea_surface_height [None]
+environment:fallback:sea_surface_height [0]
+environment:constant:x_wind [None]
+environment:fallback:x_wind [0]
+environment:constant:y_wind [None]
+environment:fallback:y_wind [0]
+environment:constant:upward_sea_water_velocity [None]
+environment:fallback:upward_sea_water_velocity [0]
+environment:constant:ocean_vertical_diffusivity [None]
+environment:fallback:ocean_vertical_diffusivity [0]
+environment:constant:sea_surface_wave_significant_height [None]
+environment:fallback:sea_surface_wave_significant_height [0]
+environment:constant:sea_surface_wave_stokes_drift_x_velocity [None]
+environment:fallback:sea_surface_wave_stokes_drift_x_velocity [0]
+environment:constant:sea_surface_wave_stokes_drift_y_velocity [None]
+environment:fallback:sea_surface_wave_stokes_drift_y_velocity [0]
+environment:constant:sea_surface_wave_period_at_variance_spectral_density_maximum [None]
+environment:fallback:sea_surface_wave_period_at_variance_spectral_density_maximum [0]
+environment:constant:sea_surface_wave_mean_period_from_variance_spectral_density_second_frequency_moment [None]
+environment:fallback:sea_surface_wave_mean_period_from_variance_spectral_density_second_frequency_moment [0]
+environment:constant:sea_surface_swell_wave_to_direction [None]
+environment:fallback:sea_surface_swell_wave_to_direction [0]
+environment:constant:sea_surface_swell_wave_peak_period_from_variance_spectral_density [None]
+environment:fallback:sea_surface_swell_wave_peak_period_from_variance_spectral_density [0]
+environment:constant:sea_surface_swell_wave_significant_height [None]
+environment:fallback:sea_surface_swell_wave_significant_height [0]
+environment:constant:sea_surface_wind_wave_to_direction [None]
+environment:fallback:sea_surface_wind_wave_to_direction [0]
+environment:constant:sea_surface_wind_wave_mean_period [None]
+environment:fallback:sea_surface_wind_wave_mean_period [0]
+environment:constant:sea_surface_wind_wave_significant_height [None]
+environment:fallback:sea_surface_wind_wave_significant_height [0]
+environment:constant:surface_downward_x_stress [None]
+environment:fallback:surface_downward_x_stress [0]
+environment:constant:surface_downward_y_stress [None]
+environment:fallback:surface_downward_y_stress [0]
+environment:constant:turbulent_kinetic_energy [None]
+environment:fallback:turbulent_kinetic_energy [0]
+environment:constant:turbulent_generic_length_scale [None]
+environment:fallback:turbulent_generic_length_scale [0]
+environment:constant:ocean_mixed_layer_thickness [None]
+environment:fallback:ocean_mixed_layer_thickness [50]
+environment:constant:sea_floor_depth_below_sea_level [None]
+environment:fallback:sea_floor_depth_below_sea_level [10000]
+environment:constant:land_binary_mask [None]
+environment:fallback:land_binary_mask [None]
+general:use_auto_landmask [True]
+drift:current_uncertainty [0]
+drift:current_uncertainty_uniform [0]
+drift:max_speed [2.0]
+readers:max_number_of_fails [1]
+general:simulation_name []
+general:coastline_action [previous]
+general:time_step_minutes [60]
+general:time_step_output_minutes [None]
+seed:ocean_only [True]
+seed:number [1]
+drift:max_age_seconds [None]
+drift:advection_scheme [euler]
+drift:horizontal_diffusivity [0]
+drift:profiles_depth [50]
+drift:wind_uncertainty [0]
+drift:relative_wind [False]
+drift:deactivate_north_of [None]
+drift:deactivate_south_of [None]
+drift:deactivate_east_of [None]
+drift:deactivate_west_of [None]
+seed:origin_marker [0]
+seed:z [0]
+seed:wind_drift_factor [0.02]
+seed:current_drift_factor [1]
+seed:terminal_velocity [0.0]
+drift:vertical_advection [True]
+drift:vertical_mixing [False]
+vertical_mixing:timestep [60]
+vertical_mixing:diffusivitymodel [environment]
+vertical_mixing:background_diffusivity [1.2e-05]
+vertical_mixing:TSprofiles [False]
+drift:wind_drift_depth [0.1]
+drift:stokes_drift [True]
+drift:stokes_drift_profile [Phillips]
+drift:use_tabularised_stokes_drift [False]
+drift:tabularised_stokes_drift_fetch [25000]
+general:seafloor_action [lift_to_seafloor]
+drift:truncate_ocean_model_below_m [None]
+seed:seafloor [False]
+=============================================
+
+DEBUG:opendrift.models.oceandrift:No machine learning correction available.
+DEBUG:opendrift.config:Adding 50 config items from environment
+DEBUG:opendrift.config:Adding 5 config items from environment
+DEBUG:opendrift.config:Adding 17 config items from __init__
+DEBUG:opendrift.config:  Overwriting config item readers:max_number_of_fails
+DEBUG:opendrift.config:Adding 5 config items from __init__
+INFO:opendrift.models.basemodel:OpenDriftSimulation initialised (version 1.11.7)
+DEBUG:opendrift.config:Adding 15 config items from oceandrift
+DEBUG:opendrift.config:  Overwriting config item seed:z
+INFO:opendrift.readers.reader_netCDF_CF_generic:Opening dataset: https://dods.ndbc.noaa.gov/thredds/dodsC/hfradar_uswc_2km
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Finding coordinate variables.
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Parsing CF grid mapping dictionary: {'grid_mapping_name': 'latitude_longitude', 'longitude_of_prime_meridian': np.float32(0.0), 'semi_major_axis': np.float32(6378137.0), 'inverse_flattening': np.float64(298.257223563)}
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Lon and lat are 1D arrays - using as projection coordinates
+INFO:opendrift.readers.reader_netCDF_CF_generic:Detected dimensions: {'time': 'time', 'x': 'lon', 'y': 'lat'}
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Skipped variables without standard_name: ['time_bnds', 'dopx', 'dopy', 'hdop', 'number_of_sites', 'number_of_radials']
+DEBUG:opendrift.readers.basereader.variables:Setting buffer size 10 for reader https://dods.ndbc.noaa.gov/thredds/dodsC/hfradar_uswc_2km, assuming a maximum average speed of 5 m/s and time span of 1:00:00
+INFO:opendrift.readers.basereader:Variable x_sea_water_velocity will be rotated from surface_eastward_sea_water_velocity
+INFO:opendrift.readers.basereader:Variable y_sea_water_velocity will be rotated from surface_northward_sea_water_velocity
+DEBUG:opendrift.readers.basereader:Variable mapping: ['sea_floor_depth_below_sea_level'] -> ['land_binary_mask'] is not activated
+DEBUG:opendrift.readers.basereader.variables:Adding variable mapping: ['x_sea_water_velocity', 'y_sea_water_velocity'] -> sea_water_speed
+INFO:opendrift.readers.reader_netCDF_CF_generic:Opening dataset: https://dods.ndbc.noaa.gov/thredds/dodsC/hfradar_uswc_6km
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Finding coordinate variables.
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Parsing CF grid mapping dictionary: {'grid_mapping_name': 'latitude_longitude', 'longitude_of_prime_meridian': np.float32(0.0), 'semi_major_axis': np.float32(6378137.0), 'inverse_flattening': np.float64(298.257223563)}
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Lon and lat are 1D arrays - using as projection coordinates
+INFO:opendrift.readers.reader_netCDF_CF_generic:Detected dimensions: {'time': 'time', 'x': 'lon', 'y': 'lat'}
+DEBUG:opendrift.readers.reader_netCDF_CF_generic:Skipped variables without standard_name: ['time_bnds', 'dopx', 'dopy', 'hdop', 'number_of_sites', 'number_of_radials']
+DEBUG:opendrift.readers.basereader.variables:Setting buffer size 5 for reader https://dods.ndbc.noaa.gov/thredds/dodsC/hfradar_uswc_6km, assuming a maximum average speed of 5 m/s and time span of 1:00:00
+INFO:opendrift.readers.basereader:Variable x_sea_water_velocity will be rotated from surface_eastward_sea_water_velocity
+INFO:opendrift.readers.basereader:Variable y_sea_water_velocity will be rotated from surface_northward_sea_water_velocity
+DEBUG:opendrift.readers.basereader:Variable mapping: ['sea_floor_depth_below_sea_level'] -> ['land_binary_mask'] is not activated
+DEBUG:opendrift.readers.basereader.variables:Adding variable mapping: ['x_sea_water_velocity', 'y_sea_water_velocity'] -> sea_water_speed
+DEBUG:opendrift.models.basemodel.environment:Added reader https://dods.ndbc.noaa.gov/thredds/dodsC/hfradar_uswc_2km
+DEBUG:opendrift.models.basemodel.environment:Added reader https://dods.ndbc.noaa.gov/thredds/dodsC/hfradar_uswc_6km
+INFO:opendrift.config:
+=============================================
+environment:constant:x_sea_water_velocity [None]
+environment:fallback:x_sea_water_velocity [0]
+environment:constant:y_sea_water_velocity [None]
+environment:fallback:y_sea_water_velocity [0]
+environment:constant:sea_surface_height [None]
+environment:fallback:sea_surface_height [0]
+environment:constant:x_wind [None]
+environment:fallback:x_wind [0]
+environment:constant:y_wind [None]
+environment:fallback:y_wind [0]
+environment:constant:upward_sea_water_velocity [None]
+environment:fallback:upward_sea_water_velocity [0]
+environment:constant:ocean_vertical_diffusivity [None]
+environment:fallback:ocean_vertical_diffusivity [0]
+environment:constant:sea_surface_wave_significant_height [None]
+environment:fallback:sea_surface_wave_significant_height [0]
+environment:constant:sea_surface_wave_stokes_drift_x_velocity [None]
+environment:fallback:sea_surface_wave_stokes_drift_x_velocity [0]
+environment:constant:sea_surface_wave_stokes_drift_y_velocity [None]
+environment:fallback:sea_surface_wave_stokes_drift_y_velocity [0]
+environment:constant:sea_surface_wave_period_at_variance_spectral_density_maximum [None]
+environment:fallback:sea_surface_wave_period_at_variance_spectral_density_maximum [0]
+environment:constant:sea_surface_wave_mean_period_from_variance_spectral_density_second_frequency_moment [None]
+environment:fallback:sea_surface_wave_mean_period_from_variance_spectral_density_second_frequency_moment [0]
+environment:constant:sea_surface_swell_wave_to_direction [None]
+environment:fallback:sea_surface_swell_wave_to_direction [0]
+environment:constant:sea_surface_swell_wave_peak_period_from_variance_spectral_density [None]
+environment:fallback:sea_surface_swell_wave_peak_period_from_variance_spectral_density [0]
+environment:constant:sea_surface_swell_wave_significant_height [None]
+environment:fallback:sea_surface_swell_wave_significant_height [0]
+environment:constant:sea_surface_wind_wave_to_direction [None]
+environment:fallback:sea_surface_wind_wave_to_direction [0]
+environment:constant:sea_surface_wind_wave_mean_period [None]
+environment:fallback:sea_surface_wind_wave_mean_period [0]
+environment:constant:sea_surface_wind_wave_significant_height [None]
+environment:fallback:sea_surface_wind_wave_significant_height [0]
+environment:constant:surface_downward_x_stress [None]
+environment:fallback:surface_downward_x_stress [0]
+environment:constant:surface_downward_y_stress [None]
+environment:fallback:surface_downward_y_stress [0]
+environment:constant:turbulent_kinetic_energy [None]
+environment:fallback:turbulent_kinetic_energy [0]
+environment:constant:turbulent_generic_length_scale [None]
+environment:fallback:turbulent_generic_length_scale [0]
+environment:constant:ocean_mixed_layer_thickness [None]
+environment:fallback:ocean_mixed_layer_thickness [50]
+environment:constant:sea_floor_depth_below_sea_level [None]
+environment:fallback:sea_floor_depth_below_sea_level [10000]
+environment:constant:land_binary_mask [None]
+environment:fallback:land_binary_mask [None]
+general:use_auto_landmask [True]
+drift:current_uncertainty [0]
+drift:current_uncertainty_uniform [0]
+drift:max_speed [2.0]
+readers:max_number_of_fails [1]
+general:simulation_name []
+general:coastline_action [previous]
+general:time_step_minutes [60]
+general:time_step_output_minutes [None]
+seed:ocean_only [True]
+seed:number [1]
+drift:max_age_seconds [None]
+drift:advection_scheme [euler]
+drift:horizontal_diffusivity [0]
+drift:profiles_depth [50]
+drift:wind_uncertainty [0]
+drift:relative_wind [False]
+drift:deactivate_north_of [None]
+drift:deactivate_south_of [None]
+drift:deactivate_east_of [None]
+drift:deactivate_west_of [None]
+seed:origin_marker [0]
+seed:z [0]
+seed:wind_drift_factor [0.02]
+seed:current_drift_factor [1]
+seed:terminal_velocity [0.0]
+drift:vertical_advection [True]
+drift:vertical_mixing [False]
+vertical_mixing:timestep [60]
+vertical_mixing:diffusivitymodel [environment]
+vertical_mixing:background_diffusivity [1.2e-05]
+vertical_mixing:TSprofiles [False]
+drift:wind_drift_depth [0.1]
+drift:stokes_drift [True]
+drift:stokes_drift_profile [Phillips]
+drift:use_tabularised_stokes_drift [False]
+drift:tabularised_stokes_drift_fetch [25000]
+general:seafloor_action [lift_to_seafloor]
+drift:truncate_ocean_model_below_m [None]
+seed:seafloor [False]
+=============================================
+
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e38a9d90>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30d5bd4450>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30d5bd7c90>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30f93b70d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30f8fc7990>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30f8410a50>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30f905f9d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30f8ea8f90>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30f9355b10>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30f851de10>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e9b0d610>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e05e03d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e8df32d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30de2eb7d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30eae73310>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30f89ed190>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30f948d310>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30f9264d50>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30dfb8b090>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30fa1e66d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30fa45fd90>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e88c3950>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30ea3eaa90>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30dff44790>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30fa4495d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e3961390>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30df7a2a10>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30f8ca2790>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e0b37c50>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30df9f2f50>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e09c6f10>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e0ecfed0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30fa2b85d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e94b7950>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30f8293310>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e3fca210>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e3f60d10>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e3d7c2d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e3c1d790>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e3bb2790>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e3a50810>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e3a505d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e8193790>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e1ee53d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30de4a00d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30ea237a10>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e00ea190>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e9c432d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e0c48c90>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30f8b9f390>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e97e69d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e0c48910>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e90067d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e9083890>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e85b31d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e95de550>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e035e410>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e9125390>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e91b2590>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e91e3fd0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e972ecd0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e919bf50>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30fa2dd290>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e8db6fd0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e8252f10>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e82bd750>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e8d53d10>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e82bc110>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e0122a10>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e82d3c50>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e2a4a4d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e34b7d50>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30deec4290>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30dfde0190>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30dfdfc750>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30dee095d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30dfd36d10>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30dfdc1810>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e831bad0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e137c3d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e8391c90>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e98cfe90>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e982f750>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e13310d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e3673590>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e2753f50>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e272d690>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e265b650>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e33b7910>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e37b5f90>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e2f4a310>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e2fd13d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30dea1bc50>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e08444d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e08b4890>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e08b63d0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e08b9d10>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e089fcd0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30dea9ed90>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7f30e0809850>
+INFO:matplotlib.animation:Animation.save using <class 'matplotlib.animation.HTMLWriter'>
+DEBUG:matplotlib.animation:frame size in pixels is 600 x 600
+DEBUG:matplotlib.animation:MovieWriter: clearing temporary path=<TemporaryDirectory '/tmp/tmpy971gsav'>
