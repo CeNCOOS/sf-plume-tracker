@@ -1,3 +1,7 @@
+## This module creates static and animated visualizations of the particle tracking model output.
+## Outputs are saved to model_output/static and model_output/animations folders
+## And pushed to skyrocket8 at /var/www/html/data/hfr-particle-tracking-sfbay/
+
 from opendrift.readers import reader_netCDF_CF_generic
 from opendrift.readers import reader_global_landmask
 from opendrift.models.oceandrift import OceanDrift
@@ -13,6 +17,45 @@ import geopandas as gpd
 import pandas as pd
 import shapely,tqdm,glob,cmocean, os
 import requests, csv, time,sys
+
+def load_roi_shapefiles():
+    sf_penninsula = gpd.read_file("/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/data/sf_peninsula.json",driver='GeoJSON',features='sf_peninsula')
+    gg_mouth = gpd.read_file("/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/data/sf-bay-seed.json",driver='GeoJSON',features='sf_bay-seed')
+    bolinas = gpd.read_file("/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/data/bolinas.json",driver='GeoJSON',features='bolinas')
+    drakes = gpd.read_file("/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/data/drakes_region.json",driver='GeoJSON',features='drakes_region')
+    gdf = pd.concat([sf_penninsula,gg_mouth,bolinas,drakes])
+    gdf['name'] = ['sf_peninsula','gg_mouth','bolinas','drakes']
+    return gdf
+
+def particle_in_polygon(model_output,gdf,time_step):
+    """ Estimate the reatlive portion of particles in different predefined regions"""
+    lons = model_output.history['lon']
+    lats = model_output.history['lat']
+    
+    llns = lons[:,time_step]
+    llns = llns[llns.mask == False]
+    lts = lats[:,time_step]
+    lts = lts[lts.mask == False]
+    
+    bolinas = 0
+    mouth = 0
+    peninsula = 0
+    drakes = 0
+    total = len(llns)
+    for ln,lt in zip(llns,lts):
+        out = gdf.contains(shapely.geometry.Point(ln,lt))
+        if out.sum() > 0:
+            if gdf.loc[out,'name'].values[0] == 'bolinas':
+                bolinas = bolinas + 1
+            elif gdf.loc[out,'name'].values[0] == 'gg_mouth':
+                mouth = mouth + 1
+            elif gdf.loc[out,'name'].values[0] == 'sf_peninsula':
+                peninsula = peninsula + 1
+            elif gdf.loc[out,'name'].values[0] == 'drakes':
+                drakes = drakes + 1
+                
+    return [mouth/total, bolinas/total, peninsula/total, drakes/total]
+
 
 def load_bathy_data():
     """ 
