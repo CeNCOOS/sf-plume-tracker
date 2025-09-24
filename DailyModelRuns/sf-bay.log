@@ -3158,3 +3158,7 @@ Traceback (most recent call last):
   File "/home/pdaniel/anaconda3/lib/python3.8/site-packages/opendrift_landmask_data-0.6-py3.8.egg/opendrift_landmask_data/mask.py", line 77, in __check_permissions__
     if not os.stat(self.lockf).st_mode & 0o777 == 0o777:
 FileNotFoundError: [Errno 2] No such file or directory: '/tmp/landmask/.mask.dat.lock'
+INFO:numexpr.utils:NumExpr defaulting to 4 threads.
+INFO:root:RUNNING: model on: 2025-09-21 08:00:00
+INFO:numexpr.utils:NumExpr defaulting to 4 threads.
+INFO:root:RUNNING: model on: 2025-09-22 08:45:00

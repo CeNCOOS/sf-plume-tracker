@@ -73,7 +73,7 @@ def particle_tracking(date):
     o.set_config('drift:stokes_drift', False)
     o.set_config('drift:current_uncertainty_uniform', .1)
     o.set_config('seed:ocean_only', False)
-    o.seed_from_shapefile("/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/data/seed_shapefiles/sf-bay-seed-small-polygon.shp",number=50,time=date,layername=None)
+    o.seed_from_shapefile("/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/data/seed_shapefiles/sf-bay-seed-small-polygon.shp",number=100,time=date,layername=None)
     fname = "concave_hrf_" + date.strftime("%Y%m%dT%H%M%S")
     base_folder = "/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/model_output/netcdf_model_v2/"
     outfile = os.path.join(base_folder, fname + "_continuous.nc")
@@ -134,16 +134,3 @@ def load_surface_currents(fname='/home/pdaniel/SuraceCurrentMaps/data/hfr-sfbay-
     ds = ds.sel(time=slice(start_date,start_date+dt.timedelta(hours=48)),lat=slice(37.5,38),lon=slice(-123,-122.2))
     ds = ds[['u','v']]
     return ds
-
-
-def main():
-
-    tides=get_high_tides()
-    recent_tides=check_recent_tides(tides)
-    start_date=dt.datetime(recent_tides.year,recent_tides.month,recent_tides.day,recent_tides.hour,recent_tides.minute)
-    o = particle_tracking(start_date)
-
-    print(start_date.strftime("%Y%m%dT%H%M%S"))
-
-if __name__=="__main__":
-    main()

@@ -291,18 +291,3 @@ def generate_animation_img_stack(o, start_date, add_current_vectors=False):
     os.system(cmd)
     os.system(cmd1)
     os.system(pcmd)
-
-
-def main():
-    tides=get_high_tides()
-    recent_tides=check_recent_tides(tides)
-    start_date=dt.datetime(recent_tides.year,recent_tides.month,recent_tides.day,recent_tides.hour,recent_tides.minute)
-
-    o = particle_tracking(start_date)
-            
-    generate_static_plot(o,start_date)
-    generate_animation_img_stack(o, start_date, add_current_vectors=True)
-    generate_animation_img_stack(o, start_date, add_current_vectors=False)
-
-if __name__=="__main__":
-    main()
