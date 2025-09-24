@@ -2,9 +2,7 @@ import sf_bay_plume_update_modelrun as model
 import sf_bay_plume_update_visualizations as viz
 import sf_bay_plume_update_heatmap as heatmap
 import datetime as dt
-import os
-import xarray as xr
-
+ 
 def main():
     ###### Run plume tracker model ######
     tides = model.get_high_tides()
