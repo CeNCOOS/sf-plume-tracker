@@ -83,8 +83,13 @@ def load_surface_currents(fname='/home/pdaniel/SuraceCurrentMaps/data/hfr-sfbay-
 
 
 def make_map(xx,yy,elv):
-    fig, ax = plt.subplots(1,subplot_kw={'projection': ccrs.PlateCarree()})
-    fig.set_size_inches(8,8)
+    # This need to be redefined if we want to have a tidal plot also on the figure
+    fig=plt.figure(figsize=(8,8))
+    gs=fig.add_gridspec(4,1,hspace=0.1)
+    ax=fig.add_suplot(gs[1:3,0],projection=ccrs.PlateCarree())
+
+    #fig, ax = plt.subplots(1,subplot_kw={'projection': ccrs.PlateCarree()})
+    #fig.set_size_inches(8,8)
     cmap = cmocean.cm.haline
 
     ax.add_feature(cfeature.LAND,zorder=-1)
@@ -118,8 +123,8 @@ def make_map(xx,yy,elv):
     #cbar.set_ticklabels(['0','24','48'],fontweight='bold')
     cbar.set_label('Hours', fontsize=10,labelpad=-40)
     #cbar.set_label('Hours', fontsize=10, fontweight='bold', labelpad=-40)
-
-    return fig, ax
+    ax_narrow=fig.add_subplot(gs[3,0])
+    return fig, ax, ax_narrow
 
 def generate_static_plot(o,start_date):
     lons = o.history['lon']
@@ -129,7 +134,7 @@ def generate_static_plot(o,start_date):
     ds = load_surface_currents()
 
 
-    fig, ax = make_map(xx,yy,elv)
+    fig, ax, ax_narrow = make_map(xx,yy,elv)
 
     for track in range(0, lats.shape[0]):
         llns = lons[track,:]
@@ -189,8 +194,8 @@ def generate_animation_img_stack(o, start_date, add_current_vectors=False):
         output_dir = '/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/model_output/animation-temp/no_vector'
     delete_list = glob.glob(os.path.join(output_dir,"*.png"))
     os.system(f"rm {' '.join(delete_list)}")
-    
-    
+    # using model output get the tide series for the model run
+    tide_series=get_tides_series(o.get_time_array()[0][0],o.get_time_array()[0][-1])
     if add_current_vectors:
         hfr_current_vectors = load_surface_currents()    
         
@@ -206,7 +211,7 @@ def generate_animation_img_stack(o, start_date, add_current_vectors=False):
     for hours in tqdm.tqdm(range(ntm),file=sys.stdout):
     #for hours in tqdm.tqdm(range(96)):
     # hours = 24
-        fig, ax = make_map(xx,yy,elv)
+        fig, ax, ax_narrow = make_map(xx,yy,elv)
 
         # Plot starting points
         llns = lons[:,0]
@@ -269,6 +274,13 @@ def generate_animation_img_stack(o, start_date, add_current_vectors=False):
                       vectors.u, 
                       vectors.v, 
                       scale=10)
+        #
+        # Add tide plot
+        #ax_narrow.plot(tide_series['dateTime'],tide_series[' Water Level'],color='k')
+        # why would this have hours*2?
+        #ax_narrow.scatter(tide_series['dateTime'][hours*2],tide_series[' Water Level'][hours*2],color='b')
+        #ax_narrow.set_xlim(tide_series['dateTime'].iloc[0],tide_series['dateTime'].iloc[-1])
+        #ax_narrow.set_ylim(-1.5,2)
 
         # Save Figure
         if add_current_vectors:
