@@ -103,9 +103,12 @@ def load_surface_currents(fname='/home/pdaniel/SuraceCurrentMaps/data/hfr-sfbay-
 
 def make_map(xx,yy,elv):
     # This need to be redefined if we want to have a tidal plot also on the figure
-    fig=plt.figure(figsize=(8,8))
+    fig=plt.figure(figsize=(10,16))
     gs=fig.add_gridspec(4,1,hspace=0.1)
-    ax=fig.add_suplot(gs[1:3,0],projection=ccrs.PlateCarree())
+    ax=fig.add_subplot(gs[1:3,0],projection=ccrs.PlateCarree())
+    #fig=plt.figure(figsize=(8,8))
+    #gs=fig.add_gridspec(4,1,hspace=0.1)
+    #ax=fig.add_suplot(gs[1:3,0],projection=ccrs.PlateCarree())
 
     #fig, ax = plt.subplots(1,subplot_kw={'projection': ccrs.PlateCarree()})
     #fig.set_size_inches(8,8)
