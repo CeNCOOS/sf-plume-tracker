@@ -203,7 +203,7 @@ def make_map(xx,yy,elv):
     ax_narrow=fig.add_subplot(gs[3,0])
     pos_ax=ax.get_position()
     pos_axn=ax_narrow.get_position()
-    new_pos_ax=[pos_ax.x0+0.15,pos_axn.y0,pos_ax.width-0.15,pos_axn.height]
+    new_pos_ax=[pos_ax.x0,pos_axn.y0,pos_ax.width,pos_axn.height]
     ax_narrow.set_position(new_pos_ax)
 
     return fig, ax, ax_narrow
@@ -260,6 +260,11 @@ def generate_static_plot(o,start_date):
     hour_str = (start_date).strftime("%H:%M")
     ax.text(1,1.05,day_str,fontweight='bold',fontsize=18,transform=ax.transAxes,ha='right',va='bottom')
     ax.text(1,1,hour_str,fontweight='bold',fontsize=18,transform=ax.transAxes,ha='right',va='bottom')
+
+    tide_series=get_tides_series(o.get_time_array()[0][0],o.get_time_array()[0][-1])
+    ax_narrow.plot(tide_series['dateTime'],tide_series[' Water Level'],color='k')
+    ax_narrow.set_xlim(tide_series['dateTime'].iloc[0],tide_series['dateTime'].iloc[-1])
+    ax_narrow.set_ylim(-1.5,2.5)
 
     plt.savefig(f"/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/model_output/static/sf_plume_static_{day_str}_res.png",bbox_inches='tight',pad_inches=0.1)
     plt.savefig(f"/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/model_output/static/sf_plume_static_latest_res.png",bbox_inches='tight',pad_inches=0.1)
@@ -346,7 +351,7 @@ def generate_animation_img_stack(o, start_date, add_current_vectors=False):
         ins.set_xlim(0.5,4.5)
         ins.set_ylim(0,100)
         ins.set_ylabel('% Particles', fontdict={'fontweight':'bold'}, labelpad=-7 )
-        ins.set_yticks([0,50,100])
+        ins.set_yticks:([0,50,100])
         ins.set_yticklabels(['0','50','100'],fontweight='bold')
         ins.xaxis.set_ticklabels(['M','BLS','SF ','Dra'],fontweight='bold')
         ins.patch.set_facecolor('None')
