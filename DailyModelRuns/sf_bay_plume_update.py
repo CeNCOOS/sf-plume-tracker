@@ -14,6 +14,26 @@ import pandas as pd
 import shapely,tqdm,glob,cmocean, os
 import requests, csv, time,sys
 #
+def get_tides_series(start_time,end_time):
+    ''' Using the model output dataframe use the start and end times to get the tide series from NOAA Tides and Currents API
+    Input:
+        df: dataframe with a datetime column 't'
+    Output:
+        tides: dataframe with tide series from NOAA Tides and Currents API
+    '''
+    start_time=start_time.strftime('%Y%m%d')
+    end_time=end_time.strftime('%Y%m%d')
+    #time_df=df['t'].dt.strftime('%Y%m%d')
+    try:
+        tides = pd.read_csv("https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date={}&end_date={}&station=9414290&product=water_level&datum=MLLW&time_zone=gmt&units=metric&format=csv".format(start_time,end_time))
+        tides['dateTime'] = pd.to_datetime(tides['Date Time'])
+        tides.index = tides.dateTime
+        return tides
+    except Exception as e:
+        print('Error in retrieving tide series from NOAA Tides and Currents API')
+        print(e)
+    return None
+
 def get_high_tides():
     try:
         noaa_api_request="https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=recent&station=9414290&product=predictions&interval=hilo&datum=mllw&units=metric&time_zone=gmt&application=web_services&format=json"
@@ -140,8 +160,11 @@ def load_surface_currents(fname='/home/pdaniel/SuraceCurrentMaps/data/hfr-sfbay-
 
 
 def make_map(xx,yy,elv):
-    fig, ax = plt.subplots(1,subplot_kw={'projection': ccrs.PlateCarree()})
-    fig.set_size_inches(8,8)
+    fig=plt.figure(figsize=(10,16))
+    gs=fig.add_gridspec(4,1,hspace=0.1)
+    ax=fig.add_subplot(gs[1:3,0],projection=ccrs.PlateCarree())
+    #fig, ax = plt.subplots(1,subplot_kw={'projection': ccrs.PlateCarree()})
+    #fig.set_size_inches(8,8)
     cmap = cmocean.cm.haline
 
     ax.add_feature(cfeature.LAND,zorder=-1)
@@ -169,14 +192,21 @@ def make_map(xx,yy,elv):
     sm.set_array([])
 
     # Add colorbar to the plot
-    cbar = plt.colorbar(sm, ax=ax, orientation='horizontal' ,anchor=(0.81,2.6),shrink=0.15,aspect=10)
+    #cbar = plt.colorbar(sm, ax=ax, orientation='horizontal' ,anchor=(0.81,2.6),shrink=0.15,aspect=10)
+    cbar = plt.colorbar(sm, ax=ax, orientation='vertical' ,anchor=(0.,0.5),shrink=0.5,aspect=10)
     cbar.set_ticks([0,48,96])
     cbar.set_ticklabels(['0','24','48'])
     #cbar.set_ticklabels(['0','24','48'],fontweight='bold')
-    cbar.set_label('Hours', fontsize=10,labelpad=-40)
+    #cbar.set_label('Hours', fontsize=10,labelpad=-40)
+    cbar.set_label('Hours', fontsize=10, labelpad=-50)
     #cbar.set_label('Hours', fontsize=10, fontweight='bold', labelpad=-40)
+    ax_narrow=fig.add_subplot(gs[3,0])
+    pos_ax=ax.get_position()
+    pos_axn=ax_narrow.get_position()
+    new_pos_ax=[pos_ax.x0+0.15,pos_axn.y0,pos_ax.width-0.15,pos_axn.height]
+    ax_narrow.set_position(new_pos_ax)
 
-    return fig, ax
+    return fig, ax, ax_narrow
 
 def generate_static_plot(o,start_date):
     lons = o.history['lon']
@@ -186,7 +216,7 @@ def generate_static_plot(o,start_date):
     ds = load_surface_currents()
 
 
-    fig, ax = make_map(xx,yy,elv)
+    fig, ax, ax_narrow = make_map(xx,yy,elv)
 
     for track in range(0, lats.shape[0]):
         llns = lons[track,:]
@@ -254,6 +284,9 @@ def generate_animation_img_stack(o, start_date, add_current_vectors=False):
     lons = o.history['lon']
     lats = o.history['lat']
     cmap = cmocean.cm.haline
+    tide_series=get_tides_series(o.get_time_array()[0][0],o.get_time_array()[0][-1])
+
+
     xx,yy,elv = load_bathy_data()
     gdf = load_roi_shapefiles()
 
@@ -263,7 +296,7 @@ def generate_animation_img_stack(o, start_date, add_current_vectors=False):
     for hours in tqdm.tqdm(range(ntm),file=sys.stdout):
     #for hours in tqdm.tqdm(range(96)):
     # hours = 24
-        fig, ax = make_map(xx,yy,elv)
+        fig, ax, ax_narrow = make_map(xx,yy,elv)
 
         # Plot starting points
         llns = lons[:,0]
@@ -318,6 +351,11 @@ def generate_animation_img_stack(o, start_date, add_current_vectors=False):
         ins.xaxis.set_ticklabels(['M','BLS','SF ','Dra'],fontweight='bold')
         ins.patch.set_facecolor('None')
         sns.despine(ax=ins)
+
+        ax_narrow.plot(tide_series['dateTime'],tide_series[' Water Level'],color='k')
+        ax_narrow.scatter(tide_series['dateTime'][hours],tide_series[' Water Level'][hours],color='b')
+        ax_narrow.set_xlim(tide_series['dateTime'].iloc[0],tide_series['dateTime'].iloc[-1])
+        ax_narrow.set_ylim(-1.5,2)
 
         if add_current_vectors:
             vectors = hfr_current_vectors.sel(time=start_date+dt.timedelta(minutes=30*hours),method='nearest')[['u','v']]
