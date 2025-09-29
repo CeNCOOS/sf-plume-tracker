@@ -17,6 +17,25 @@ import geopandas as gpd
 import pandas as pd
 import shapely,tqdm,glob,cmocean, os
 import requests, csv, time,sys
+def get_tides_series(start_time,end_time):
+    ''' Using the model output dataframe use the start and end times to get the tide series from NOAA Tides and Currents API
+    Input:
+        df: dataframe with a datetime column 't'
+    Output:
+        tides: dataframe with tide series from NOAA Tides and Currents API
+    '''
+    #time_df=df['t'].dt.strftime('%Y%m%d')
+    start_str = start_time.strftime('%Y%m%d')
+    end_str = end_time.strftime('%Y%m%d')
+    try:
+        tides = pd.read_csv("https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date={}&end_date={}&station=9414290&product=water_level&datum=MLLW&time_zone=gmt&units=metric&format=csv".format(start_str,end_str))
+        tides['dateTime'] = pd.to_datetime(tides['Date Time'])
+        tides.index = tides.dateTime
+        return tides
+    except Exception as e:
+        print('Error in retrieving tide series from NOAA Tides and Currents API')
+        print(e)
+    return None
 
 def load_roi_shapefiles():
     sf_penninsula = gpd.read_file("/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/data/sf_peninsula.json",driver='GeoJSON',features='sf_peninsula')
