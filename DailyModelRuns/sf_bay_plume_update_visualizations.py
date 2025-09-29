@@ -137,6 +137,8 @@ def generate_static_plot(o,start_date):
     lons = o.history['lon']
     lats = o.history['lat']
     cmap = cmocean.cm.haline
+    tide_series=get_tides_series(o.get_time_array()[0][0],o.get_time_array()[0][-1])
+
     xx,yy,elv = load_bathy_data()
     ds = load_surface_currents()
 
@@ -180,7 +182,13 @@ def generate_static_plot(o,start_date):
                 zorder=100,
                 marker='o')
             
-            
+    ax_narrow.plot(tide_series['dateTime'],tide_series[' Water Level'],color='k')
+        # why would this have hours*2?
+        #ax_narrow.scatter(tide_series['dateTime'][hours*2],tide_series[' Water Level'][hours*2],color='b')
+    #ax_narrow.scatter(tide_series['dateTime'][hours],tide_series[' Water Level'][hours],color='b')
+    ax_narrow.set_xlim(tide_series['dateTime'].iloc[0],tide_series['dateTime'].iloc[-1])
+    ax_narrow.set_ylim(-1.5,2)
+           
     day_str = (start_date).strftime("%Y-%m-%d")
     hour_str = (start_date).strftime("%H:%M")
     ax.text(1,1.05,day_str,fontweight='bold',fontsize=18,transform=ax.transAxes,ha='right',va='bottom')
