@@ -117,13 +117,20 @@ def make_map(xx,yy,elv):
     sm.set_array([])
 
     # Add colorbar to the plot
-    cbar = plt.colorbar(sm, ax=ax, orientation='horizontal' ,anchor=(0.81,2.6),shrink=0.15,aspect=10)
+    #cbar = plt.colorbar(sm, ax=ax, orientation='horizontal' ,anchor=(0.81,2.6),shrink=0.15,aspect=10)
+    cbar = plt.colorbar(sm, ax=ax, orientation='vertical' ,anchor=(0.0,0.5),shrink=0.5,aspect=10)
     cbar.set_ticks([0,48,96])
     cbar.set_ticklabels(['0','24','48'])
     #cbar.set_ticklabels(['0','24','48'],fontweight='bold')
-    cbar.set_label('Hours', fontsize=10,labelpad=-40)
+    #cbar.set_label('Hours', fontsize=10,labelpad=-40)
+    cbar.set_label('Hours', fontsize=10,labelpad=-50)
+
     #cbar.set_label('Hours', fontsize=10, fontweight='bold', labelpad=-40)
     ax_narrow=fig.add_subplot(gs[3,0])
+    pos_ax = ax.get_position()
+    pos_axn = ax_narrow.get_position()
+    new_pos_axn = [pos_ax.x0+0.15, pos_axn.y0, pos_ax.width-0.15, pos_axn.height]
+    ax_narrow.set_position(new_pos_axn)
     return fig, ax, ax_narrow
 
 def generate_static_plot(o,start_date):
