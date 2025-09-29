@@ -38,6 +38,10 @@ def get_tides_series(start_time,end_time):
     return None
 
 def load_roi_shapefiles():
+    ''' Load Regions of Interest shapefiles
+        Output:
+            gdf: geopandas dataframe with regions of interest
+    '''
     sf_penninsula = gpd.read_file("/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/data/sf_peninsula.json",driver='GeoJSON',features='sf_peninsula')
     gg_mouth = gpd.read_file("/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/data/sf-bay-seed.json",driver='GeoJSON',features='sf_bay-seed')
     bolinas = gpd.read_file("/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/data/bolinas.json",driver='GeoJSON',features='bolinas')
@@ -47,7 +51,15 @@ def load_roi_shapefiles():
     return gdf
 
 def particle_in_polygon(model_output,gdf,time_step):
-    """ Estimate the reatlive portion of particles in different predefined regions"""
+    '''
+    Estimate the relative portion of particles in different predefined regions
+        Input:
+        model_output: OceanDrift object containing the model output
+        gdf: geopandas dataframe with region of interest shapefiles
+        time_step: integer representing the time step to analyze
+        Output:
+            list with relative portions of particles in each region [golden gate mouth, bolinas, sf peninsula, drakes]
+    '''
     lons = model_output.history['lon']
     lats = model_output.history['lat']
     
@@ -77,10 +89,13 @@ def particle_in_polygon(model_output,gdf,time_step):
 
 
 def load_bathy_data():
-    """ 
+    '''
     Load Bathymetry data (.tiff) from outside the SF Bay Area
-    
-    """
+        Output: 
+            xx: 1D array of x coordinates
+            yy: 1D array of y coordinates 
+            elv: 2D array of elevation values
+    '''
     ds = xr.open_dataset('/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/data/sf_bay_topo.nc')
     #ds = xr.open_dataset('/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/data/sf_bay_topo.tiff',engine='rasterio')
     elv = ds['band_data'].values
@@ -90,9 +105,13 @@ def load_bathy_data():
 
 
 def load_surface_currents(fname='/home/pdaniel/SuraceCurrentMaps/data/hfr-sfbay-2023_spring.nc',):
-    """
+    '''
     Load HFR surface currents data from the SF Bay Area
-    """
+    Input:
+        fname: string representing the file path to the netCDF file containing HFR surface currents data
+    Output:
+        ds: xarray dataset containing the HFR surface currents data for the last 48 hours
+    '''
     start_date=dt.datetime.utcnow()-dt.timedelta(days=2)
     #ds = xr.open_dataset('./data/surface_currents/hfr-sfbay-2024-april.nc')
     ds=xr.open_dataset('https://dods.ndbc.noaa.gov/thredds/dodsC/hfradar_uswc_2km')
@@ -102,6 +121,18 @@ def load_surface_currents(fname='/home/pdaniel/SuraceCurrentMaps/data/hfr-sfbay-
 
 
 def make_map(xx,yy,elv):
+    '''
+    Create a map with bathymetry and coastlines
+        Input:
+            xx: 1D array of x coordinates
+            yy: 1D array of y coordinates 
+            elv: 2D array of elevation values
+        Output:
+            fig: matplotlib figure object
+            ax: matplotlib axis object for the map
+            ax_narrow: matplotlib axis object for the tide plot
+    '''
+
     # This need to be redefined if we want to have a tidal plot also on the figure
     fig=plt.figure(figsize=(10,16))
     gs=fig.add_gridspec(4,1,hspace=0.1)
@@ -151,11 +182,19 @@ def make_map(xx,yy,elv):
     ax_narrow=fig.add_subplot(gs[3,0])
     pos_ax = ax.get_position()
     pos_axn = ax_narrow.get_position()
-    new_pos_axn = [pos_ax.x0+0.15, pos_axn.y0, pos_ax.width-0.15, pos_axn.height]
+    new_pos_axn = [pos_ax.x0, pos_axn.y0, pos_ax.width, pos_axn.height]
     ax_narrow.set_position(new_pos_axn)
     return fig, ax, ax_narrow
 
 def generate_static_plot(o,start_date):
+    '''
+    Generate a static plot of the particle trajectories and tide series
+        Input:
+            o: OceanDrift object containing the model output
+            start_date: datetime object representing the start date of the model run
+        Output:
+            Saves a static plot to the model_output/static folder and pushes it to skyrocket8
+    '''
     lons = o.history['lon']
     lats = o.history['lat']
     cmap = cmocean.cm.haline
@@ -223,6 +262,15 @@ def generate_static_plot(o,start_date):
 
 
 def generate_animation_img_stack(o, start_date, add_current_vectors=False):
+    '''
+    Generate an animation image stack of the particle trajectories and tide series
+        Input:
+            o: OceanDrift object containing the model output
+            start_date: datetime object representing the start date of the model run
+            add_current_vectors: boolean indicating whether to add current vectors to the plot
+        Output:
+            Saves an image stack to the model_output/animation-temp folder for creating an animation later
+    '''
     
     # Remove all files in the temp_img_stack folder
     if add_current_vectors:
