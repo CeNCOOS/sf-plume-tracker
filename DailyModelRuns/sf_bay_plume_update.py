@@ -198,12 +198,12 @@ def make_map(xx,yy,elv):
     cbar.set_ticklabels(['0','24','48'])
     #cbar.set_ticklabels(['0','24','48'],fontweight='bold')
     #cbar.set_label('Hours', fontsize=10,labelpad=-40)
-    cbar.set_label('Hours', fontsize=10, labelpad=-50)
+    cbar.set_label('Hours', fontsize=10, labelpad=-55)
     #cbar.set_label('Hours', fontsize=10, fontweight='bold', labelpad=-40)
     ax_narrow=fig.add_subplot(gs[3,0])
     pos_ax=ax.get_position()
     pos_axn=ax_narrow.get_position()
-    new_pos_ax=[pos_ax.x0,pos_axn.y0,pos_ax.width,pos_axn.height]
+    new_pos_ax=[pos_ax.x0,pos_axn.y0-0.09,pos_ax.width,pos_axn.height+0.09]
     ax_narrow.set_position(new_pos_ax)
 
     return fig, ax, ax_narrow
@@ -264,7 +264,7 @@ def generate_static_plot(o,start_date):
     tide_series=get_tides_series(o.get_time_array()[0][0],o.get_time_array()[0][-1])
     ax_narrow.plot(tide_series['dateTime'],tide_series[' Water Level'],color='k')
     ax_narrow.set_xlim(tide_series['dateTime'].iloc[0],tide_series['dateTime'].iloc[-1])
-    ax_narrow.set_ylim(-1.5,2.5)
+    ax_narrow.set_ylim(tide_series[' Water Level'].min(),tide_series[' Water Level'].max())
 
     plt.savefig(f"/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/model_output/static/sf_plume_static_{day_str}_res.png",bbox_inches='tight',pad_inches=0.1)
     plt.savefig(f"/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/model_output/static/sf_plume_static_latest_res.png",bbox_inches='tight',pad_inches=0.1)
@@ -358,9 +358,11 @@ def generate_animation_img_stack(o, start_date, add_current_vectors=False):
         sns.despine(ax=ins)
 
         ax_narrow.plot(tide_series['dateTime'],tide_series[' Water Level'],color='k')
-        ax_narrow.scatter(tide_series['dateTime'][hours],tide_series[' Water Level'][hours],color='b')
+        theindextide=tide_series.index.get_loc(start_date+dt.timedelta(minutes=30*hours),method='nearest')
+        ax_narrow.scatter(tide_series['dateTime'][theindextide],tide_series[' Water Level'][theindextide],color='b')
+        #ax_narrow.scatter(tide_series['dateTime'][hours],tide_series[' Water Level'][hours],color='b')
         ax_narrow.set_xlim(tide_series['dateTime'].iloc[0],tide_series['dateTime'].iloc[-1])
-        ax_narrow.set_ylim(-1.5,2)
+        ax_narrow.set_ylim(tide_series[' Water Level'].min(),tide_series[' Water Level'].max())
 
         if add_current_vectors:
             vectors = hfr_current_vectors.sel(time=start_date+dt.timedelta(minutes=30*hours),method='nearest')[['u','v']]

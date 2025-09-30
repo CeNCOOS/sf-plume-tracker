@@ -176,13 +176,13 @@ def make_map(xx,yy,elv):
     cbar.set_ticklabels(['0','24','48'])
     #cbar.set_ticklabels(['0','24','48'],fontweight='bold')
     #cbar.set_label('Hours', fontsize=10,labelpad=-40)
-    cbar.set_label('Hours', fontsize=10,labelpad=-50)
+    cbar.set_label('Hours', fontsize=10,labelpad=-55)
 
     #cbar.set_label('Hours', fontsize=10, fontweight='bold', labelpad=-40)
     ax_narrow=fig.add_subplot(gs[3,0])
     pos_ax = ax.get_position()
     pos_axn = ax_narrow.get_position()
-    new_pos_axn = [pos_ax.x0, pos_axn.y0, pos_ax.width, pos_axn.height]
+    new_pos_axn = [pos_ax.x0, pos_axn.y0-0.09, pos_ax.width, pos_axn.height+0.09]
     ax_narrow.set_position(new_pos_axn)
     return fig, ax, ax_narrow
 
@@ -248,7 +248,7 @@ def generate_static_plot(o,start_date):
         #ax_narrow.scatter(tide_series['dateTime'][hours*2],tide_series[' Water Level'][hours*2],color='b')
     #ax_narrow.scatter(tide_series['dateTime'][hours],tide_series[' Water Level'][hours],color='b')
     ax_narrow.set_xlim(tide_series['dateTime'].iloc[0],tide_series['dateTime'].iloc[-1])
-    ax_narrow.set_ylim(-1.5,2)
+    ax_narrow.set_ylim(tide_series[' Water Level'].min(),tide_series[' Water Level'].max())
            
     day_str = (start_date).strftime("%Y-%m-%d")
     hour_str = (start_date).strftime("%H:%M")
@@ -368,7 +368,7 @@ def generate_animation_img_stack(o, start_date, add_current_vectors=False):
         #ax_narrow.scatter(tide_series['dateTime'][hours*2],tide_series[' Water Level'][hours*2],color='b')
         #ax_narrow.scatter(tide_series['dateTime'][hours],tide_series[' Water Level'][hours],color='b')
         ax_narrow.set_xlim(tide_series['dateTime'].iloc[0],tide_series['dateTime'].iloc[-1])
-        ax_narrow.set_ylim(-1.5,2)
+        ax_narrow.set_ylim(tide_series[' Water Level'].min(),tide_series[' Water Level'].max())
 
         # Save Figure
         if add_current_vectors:
