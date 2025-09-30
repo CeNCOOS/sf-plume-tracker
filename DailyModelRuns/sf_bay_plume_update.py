@@ -265,6 +265,7 @@ def generate_static_plot(o,start_date):
     ax_narrow.plot(tide_series['dateTime'],tide_series[' Water Level'],color='k')
     ax_narrow.set_xlim(tide_series['dateTime'].iloc[0],tide_series['dateTime'].iloc[-1])
     ax_narrow.set_ylim(tide_series[' Water Level'].min(),tide_series[' Water Level'].max())
+    ax_narrow.set_ylabel('Tide (m)', fontdict={'fontweight':'bold'}) 
 
     plt.savefig(f"/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/model_output/static/sf_plume_static_{day_str}_res.png",bbox_inches='tight',pad_inches=0.1)
     plt.savefig(f"/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/model_output/static/sf_plume_static_latest_res.png",bbox_inches='tight',pad_inches=0.1)
@@ -363,6 +364,7 @@ def generate_animation_img_stack(o, start_date, add_current_vectors=False):
         #ax_narrow.scatter(tide_series['dateTime'][hours],tide_series[' Water Level'][hours],color='b')
         ax_narrow.set_xlim(tide_series['dateTime'].iloc[0],tide_series['dateTime'].iloc[-1])
         ax_narrow.set_ylim(tide_series[' Water Level'].min(),tide_series[' Water Level'].max())
+        ax_narrow.set_ylabel('Tide (m)', fontdict={'fontweight':'bold'})
 
         if add_current_vectors:
             vectors = hfr_current_vectors.sel(time=start_date+dt.timedelta(minutes=30*hours),method='nearest')[['u','v']]
