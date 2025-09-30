@@ -363,8 +363,10 @@ def generate_animation_img_stack(o, start_date, add_current_vectors=False):
         # Add tide plot
         ax_narrow.plot(tide_series['dateTime'],tide_series[' Water Level'],color='k')
         # why would this have hours*2?
+        theindextide=tide_series.index.get_loc(start_date+dt.timedelta(minutes=30*hours),method='nearest')
+        ax_narrow.scatter(tide_series['dateTime'][theindextide],tide_series[' Water Level'][theindextide],color='b')
         #ax_narrow.scatter(tide_series['dateTime'][hours*2],tide_series[' Water Level'][hours*2],color='b')
-        ax_narrow.scatter(tide_series['dateTime'][hours],tide_series[' Water Level'][hours],color='b')
+        #ax_narrow.scatter(tide_series['dateTime'][hours],tide_series[' Water Level'][hours],color='b')
         ax_narrow.set_xlim(tide_series['dateTime'].iloc[0],tide_series['dateTime'].iloc[-1])
         ax_narrow.set_ylim(-1.5,2)
 
