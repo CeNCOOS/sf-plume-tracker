@@ -73,3 +73,4 @@ __pycache__/
 *.json
 *gif.gz
 *.png.gz
+*.nc.gz
