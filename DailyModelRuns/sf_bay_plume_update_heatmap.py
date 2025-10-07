@@ -10,12 +10,14 @@ from matplotlib.animation import FuncAnimation
 from matplotlib.colors import ListedColormap
 
 def get_latest_ds():
+    '''
+    Get the latest netCDF dataset from the model output directory.
+    '''
     output_dir = "../DailyModelRuns/model_output/netcdf_model_v2/"
     output_files = os.listdir(output_dir)
     output_files = [f for f in output_files if f.endswith('.nc')]
     ds = xr.open_dataset(os.path.join(output_dir, output_files[-1]))
     return ds
-
 
 def compute_heatmap(ds):
     # Shapes: (trajectory, time)
@@ -75,6 +77,7 @@ def compute_heatmap(ds):
     heat_da_masked = heat_da.where(heat_da != 0)
 
     return heat_da_masked, counts, lat_edges, lon_edges, first_strand_idx
+
 
 def plot_heatmap_aggregated(ds, lon_edges, lat_edges):
     """
@@ -155,84 +158,119 @@ def plot_heatmap_aggregated(ds, lon_edges, lat_edges):
 
     plt.savefig('/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/model_output/heatmaps/heatmap_{}.png'.format(start_date.replace(' ','_').replace(':','-')) , bbox_inches='tight')
 
-    plt.show()
-    return heat_da_masked
+
+def get_tides_series(start_time,end_time):
+    ''' Using the model output dataframe use the start and end times to get the tide series from NOAA Tides and Currents API
+    Input:
+        df: dataframe with a datetime column 't'
+    Output:
+        tides: dataframe with tide series from NOAA Tides and Currents API
+    '''
+    start_str = start_time.split('T')[0]
+    end_str = end_time.split('T')[0]
+
+    try:
+        tides = pd.read_csv("https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date={}&end_date={}&station=9414290&product=water_level&datum=MLLW&time_zone=gmt&units=metric&format=csv".format(start_str,end_str))
+        tides['dateTime'] = pd.to_datetime(tides['Date Time'])
+        tides.index = tides.dateTime
+        return tides
+    except Exception as e:
+        print('Error in retrieving tide series from NOAA Tides and Currents API')
+        print(e)
+    return None
 
 
-
-def animate_heatmap(heat_da_masked, ds, first_strand_idx):
+def animate_heatmap_with_tides(heat_da_masked, ds, first_strand_idx):
     """
-    Create an animation of the heatmap over time.
-
-    Parameters:
-    - heat_da_masked: xarray.DataArray with dimensions ('time', 'lat_bin', 'lon_bin')
-    - ds: xarray.Dataset with dimensions ('trajectory', 'time') and variables 'lon', 'lat', 'status'
-    - first_strand_idx: 1D array indicating the first time index each particle stranded
+    Create an animation of the heatmap over time with a subplot of tides.
     """
-    # Create figure and axis with Cartopy projection
+    # --- Get tide series ---
+    start_time = str(heat_da_masked.time.values[0])
+    end_time = str(heat_da_masked.time.values[-1])
+    tide_series = get_tides_series(start_time, end_time)
 
-    fig, ax = plt.subplots(figsize=(10, 8), subplot_kw={'projection': ccrs.PlateCarree()})
+    # --- Create figure with two rows ---
+    fig, (ax_map, ax_tide) = plt.subplots(
+        2, 1, figsize=(10, 10),
+        gridspec_kw={'height_ratios': [5, 1]},
+        subplot_kw={'projection': ccrs.PlateCarree()}
+    )
 
-    # Add bathymetry contours
+    fig.clf()
+    gs = fig.add_gridspec(2, 1, height_ratios=[5, 1])
+    ax_map = fig.add_subplot(gs[0], projection=ccrs.PlateCarree())
+    ax_tide = fig.add_subplot(gs[1])
+
+    # --- Bathymetry and coast ---
     ds_o = xr.open_dataset('/home/pdaniel/SurfaceCurrentMaps/DailyModelRuns/data/sf_bay_topo.nc')
     elv = ds_o['band_data'].values
-    xx = ds_o.x.values
-    yy = ds_o.y.values
+    xx, yy = ds_o.x.values, ds_o.y.values
     levels = [0,5,10,20,50,100,200,500,1000]
     cmap = cmocean.cm.ice_r
     cmap_trunc = ListedColormap(cmap(np.linspace(0.1,1,256)))
-    ax.contourf(xx, yy, -1*elv[0], zorder=-1, cmap=cmap_trunc, levels=levels)
-    ax.contour(xx, yy, -1*elv[0], levels=levels[1:], colors='k', linewidths=0.5, linestyles='solid')
+    ax_map.contourf(xx, yy, -1*elv[0], zorder=-1, cmap=cmap_trunc, levels=levels)
+    ax_map.contour(xx, yy, -1*elv[0], levels=levels[1:], colors='k', linewidths=0.5)
 
-    # Add coastline
     coastline = cfeature.NaturalEarthFeature(
         'physical', 'coastline', '10m',
         edgecolor='black', facecolor='slategrey', linewidth=0.8
     )
-    ax.add_feature(coastline, zorder=1)
+    ax_map.add_feature(coastline, zorder=1)
+    ax_map.set_xlim(-123.05, -122.35)
+    ax_map.set_ylim(37.5, 38.1)
 
-    # Set extent
-    ax.set_xlim(-123.05, -122.35)
-    ax.set_ylim(37.5, 38.1)
-
-    # Create initial QuadMesh
-    mesh = ax.pcolormesh(
+    # --- Heatmap mesh ---
+    mesh = ax_map.pcolormesh(
         heat_da_masked.lon_bin,
         heat_da_masked.lat_bin,
         heat_da_masked.isel(time=0),
         cmap='magma_r',
         zorder=2
     )
-    cbar = fig.colorbar(mesh, ax=ax, label='% of Trajectories in Grid Cell',shrink=0.7)
+    cbar = fig.colorbar(mesh, ax=ax_map, shrink=0.7)
+    cbar.set_label('% of Trajectories in Grid Cell', fontsize=14)
     n_particles = ds.sizes['trajectory']
-    # Update function
+
+    # --- Tide subplot ---
+    ax_tide.plot(tide_series['dateTime'], tide_series[' Water Level'], color='k')
+    ax_tide.set_ylabel("Water Level (m)")
+
+    # Moving vertical line
+    vline = ax_tide.axvline(tide_series['dateTime'].iloc[0], color='coral', lw=1)
+
+    # --- Update function ---
     def update(frame):
+        # Update map heatmap
         mesh.set_array(heat_da_masked.isel(time=frame).values.ravel())
         time_str = pd.to_datetime(heat_da_masked.time.values[frame]).strftime('%Y-%m-%d %H:%M')
-        ax.set_title(f"Time: {time_str}")
+        ax_map.set_title(f"Time: {time_str}", fontsize=16)
 
+        # % stranded
         stranded_mask = (first_strand_idx >= 0) & (first_strand_idx <= frame)
-
         num_stranded_frame = (stranded_mask.sum() / n_particles * 100).round(2)
-        # Remove previous text (so it doesn’t overplot)
-        for txt in ax.texts:
+        for txt in ax_map.texts:
             txt.remove()
-
-        # Add new text
-        ax.text(
-            0.02, 0.95,  # location in axis coordinates
-            f"Particles that have reached the coastline: {num_stranded_frame} %",
-            transform=ax.transAxes,
+            
+        ax_map.text(
+            0.02, 0.95,
+            f"Particles stranded: {num_stranded_frame} %",
+            transform=ax_map.transAxes,
             fontsize=14,
-            color='black'
+            color='white',
+            ha='left',
+            va='top',
+            bbox=dict(facecolor='black', alpha=0.6, edgecolor='none', boxstyle='round,pad=0.3')
         )
 
-        return mesh,
+        # Update tide vertical line
+        vline.set_xdata([heat_da_masked.time.values[frame],
+                         heat_da_masked.time.values[frame]])
 
-    # Create animation
-    ani = FuncAnimation(fig, update, frames=heat_da_masked.sizes['time'], blit=True, interval=200)
+        return mesh, vline
 
-    # Save as GIF
-    ani.save("../DailyModelRuns/model_output/heatmaps/trajectories_animation.gif", writer="pillow", fps=5)
+    # --- Animate ---
+    ani = FuncAnimation(fig, update, frames=heat_da_masked.sizes['time'],
+                        blit=True, interval=200)
 
-    plt.show()
+    ani.save("../DailyModelRuns/model_output/heatmaps/trajectories_tides.gif",
+             writer="pillow", fps=7)
